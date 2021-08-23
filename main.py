@@ -3,7 +3,8 @@ import pandas as pd
 
 from tfidf import get_vocab_idf
 
-st.title('Sentiment Classification')
+st.title('Binary Classification')
+st.write("This app shows the featurization created from delta tf-idf for binary classification.")
 
 # Sidebar
 
@@ -28,7 +29,14 @@ st.subheader('1. Dataset')
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     if st.checkbox(label="View dataset"):
-        st.write(uploaded_file)
+        st.write(df)
+        cnt_0 = df.loc[df['label'] == 0].shape[0]
+        cnt_1 = df.loc[df['label'] == 1].shape[0]
+        st.write(f"There are {cnt_0} samples from class 0 and {cnt_1} from class 1.")
+        if cnt_0 > cnt_1:
+            st.write(f"Class 0 is the majority class with {cnt_0/df.shape[0]:.4f}%")
+        else:
+            st.write(f"Class 1 is the majority class with {cnt_1 / df.shape[0]:.4f}%")
 
     vocab = get_vocab_idf(df, min_df=df_range[0], max_df=df_range[1])
 
@@ -54,7 +62,7 @@ if uploaded_file is not None:
         found_idf = vocab.loc[vocab['Word'] == search_word, 'Delta-Idf'].values[0]
         left_idf.write(found_idf)
     else:
-        left_idf.write("Word not found.")
+        if search_word != '': left_idf.write("Word not found.")
 
 
 else:
