@@ -18,7 +18,7 @@ with st.sidebar.header("Display parameters"):
 
 with st.sidebar.header("Feature parameters"):
     df_range = st.sidebar.slider(label="Document frequency range", min_value=0.,
-                                 max_value=1., step=.001, value=(0., 1.),
+                                 max_value=1., step=.0001, value=(0., 1.),
                                  help="Vocabulary outside this range will not be considered")
 
 # Main page
@@ -34,9 +34,9 @@ if uploaded_file is not None:
         cnt_1 = df.loc[df['label'] == 1].shape[0]
         st.write(f"There are {cnt_0} samples from class 0 and {cnt_1} from class 1.")
         if cnt_0 > cnt_1:
-            st.write(f"Class 0 is the majority class with {cnt_0/df.shape[0]:.4f}%")
+            st.write(f"Class 0 is the majority class with {cnt_0/df.shape[0]*100:.4f}%")
         else:
-            st.write(f"Class 1 is the majority class with {cnt_1 / df.shape[0]:.4f}%")
+            st.write(f"Class 1 is the majority class with {cnt_1 / df.shape[0]*100:.4f}%")
 
     vocab = get_vocab_idf(df, min_df=df_range[0], max_df=df_range[1])
 
@@ -47,9 +47,9 @@ if uploaded_file is not None:
 
     st.subheader("2. Most relevant words")
     right_col, left_col = st.columns(2)
-    right_col.write("Top 10 most relevant words for majority class")
+    right_col.write("Top 10 most relevant words for negative (0) class")
     right_col.dataframe(top_n)
-    left_col.write("Top 10 most relevant words for minority class")
+    left_col.write("Top 10 most relevant words for positive (1) class")
     left_col.dataframe(bottom_n)
 
     st.subheader("3. Word search")
